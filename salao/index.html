@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Salão VittaBeauty — Promoções</title>
+
+    <link href="icon.png" rel="icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&amp;display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+            background: #f7f7fb;
+            color: #111;
+        }
+
+        .navbar-brand .mark {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin-right: 10px;
+        }
+        .navbar-brand .mark img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .hero-carousel .carousel-item { height: 50vh; min-height: 220px; max-height: 380px; }
+        @media(min-width:1000px){ .hero-carousel .carousel-item { height: 33vh; min-height: 280px; max-height: 420px; } }
+
+        .hero-carousel .carousel-item img { max-height: 100%; width: 100%; object-fit: cover; }
+        .promo-card { display: flex; gap: 20px; flex-wrap: wrap; }
+        .promo-card img { max-width: 100%; border-radius: 12px; }
+
+        .hero-card, .promo-card, .app-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(15,15,35,0.06);
+        }
+        .price { font-weight: 800; color: #4CAF50; }
+        .btn-primary, .btn-danger { background-color: #7E57C2 !important; border-color: #7E57C2 !important; }
+        .btn-outline-secondary { border-color: #4CAF50; color: #4CAF50; }
+        .btn-outline-secondary:hover { background-color: #4CAF50; color: white; }
+
+        #promocoes { background-color: #ac46e3;  background: #ac46e3; color: #fff; font-weight: bold; }
+        #promocoes .text-muted { color: #eee !important; }
+
+        .phone-frame {
+            position: relative;
+            width: 250px;
+            height: 460px;
+            background: #111;
+            border-radius: 36px;
+            padding: 16px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .phone-frame::before {
+            content: "";
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 6px;
+            background: #333;
+            border-radius: 3px;
+        }
+        .phone-frame .app-screen {
+            width: 100%;
+            height: 100%;
+            border-radius: 24px;
+            object-fit: cover;
+        }
+
+        footer { padding: 28px 0; background: #000; color: #f1f1f1; font-size: 14px; }
+        footer .text-muted { color: #bbb !important; }
+    </style>
+
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg bg-white sticky-top border-bottom">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <div class="mark"><img src="icon.png" alt="Logo"></div>
+                <div>
+                    <div><span>VITTA</span> <span class="fw-bold">BEAUTY</span></div>
+                    <div class="small text-muted">Salão de Beleza</div>
+                </div>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav align-items-lg-center gap-lg-3">
+                    <li class="nav-item"><a class="nav-link" href="#home">Início</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#servicos">Serviços</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#promocoes">Promoções</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#contato">Contato</a></li>
+                    <li class="nav-item"><a class="btn btn-primary fw-bold" href="#reserva">Agende</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section id="home" class="hero-carousel">
+        <br><div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+
+                <div class="carousel-item">
+                    <div class="container h-100 d-flex align-items-center">
+                        <div class="promo-card w-100 d-flex flex-wrap align-items-center justify-content-between">
+                            <div class="col-md-6">
+                                <h1>Beleza que inspira — cuidado profissional</h1>
+                                <p class="text-muted">Cortes, coloração, manicure, estética e muito mais. Promoções exclusivas na nossa loja. Venha relaxar e se transformar.</p>
+                                <a href="#promocoes" class="btn btn-primary fw-bold">Ver promoções</a>
+                                <div class="mt-2 small text-muted">Aberto de seg. a sáb. — 09:00 às 19:00</div>
+                            </div>
+                            <div class="col-md-5 text-center">
+                                <img src="example.jpg" class="img-fluid rounded shadow" alt="Modelo com cabelo estiloso" style="max-height:250px; object-fit:cover;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item active">
+                    <div class="container h-100 d-flex align-items-center">
+                        <div class="promo-card w-100 d-flex flex-wrap align-items-center justify-content-between">
+                        <img src="rosa.jpg" class="img-fluid w-100 h-100" alt="Modelo com cabelo estiloso" style="object-fit:cover; border-radius:12px;">
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="container h-100 d-flex align-items-center">
+                        <div class="promo-card w-100 d-flex flex-wrap align-items-center justify-content-between">
+                        <img src="roxo.jpg" class="img-fluid w-100 h-100" alt="Modelo com cabelo estiloso" style="object-fit:cover; border-radius:12px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span></button>
+            <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>
+
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class=""></button>
+                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" class="active" aria-current="true"></button>
+                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2" class=""></button>
+                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="3"></button>
+                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="4"></button>
+                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="5"></button>
+            </div>
+        <br></div>
+    </section>
+
+    <main>
+        <section id="promocoes" class="py-5 container-fluid">
+            <div class="container">
+                <h2 class="mb-3"><strong>Promoções</strong></h2>
+                <p class="text-muted mb-4"><strong>Aproveite nossos pacotes com desconto — por tempo limitado.</strong></p>
+
+                <div class="row g-4">
+                    <div class="row g-4">
+                        <div class="col-md-4">
+                            <div class="card h-100 shadow-sm">
+                                <img src="corte.jpg" class="card-img-top" alt="Corte moderno">
+                                <div class="card-body d-flex flex-column">
+                                    <div class="d-flex justify-content-between">
+                                        <strong>Corte + Finalização</strong>
+                                        <span class="price">R$ 59,90</span>
+                                    </div>
+                                    <p class="text-muted small">Corte personalizado com escova modeladora. Profissionais experientes.</p>
+                                    <div class="mt-auto d-flex gap-2">
+                                        <a href="#reserva" class="btn btn-outline-secondary">Reservar</a>
+                                        <a href="#detalhe1" class="btn btn-danger">Saiba mais</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="card h-100 shadow-sm">
+                                <img src="cabelo.jpg" class="card-img-top" alt="Coloração vibrante">
+                                <div class="card-body d-flex flex-column">
+                                    <div class="d-flex justify-content-between">
+                                        <strong>Coloração + Tratamento</strong>
+                                        <span class="price">R$ 129,90</span>
+                                    </div>
+                                    <p class="text-muted small">Coloração profissional com tratamento nutritivo incluso.</p>
+                                    <div class="mt-auto d-flex gap-2">
+                                        <a href="#reserva" class="btn btn-outline-secondary">Reservar</a>
+                                        <a href="#detalhe2" class="btn btn-danger">Saiba mais</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="card h-100 shadow-sm">
+                                <img src="maos.jpg" class="card-img-top" alt="Manicure elegante">
+                                <div class="card-body d-flex flex-column">
+                                    <div class="d-flex justify-content-between">
+                                        <strong>Manicure + Esmaltação</strong>
+                                        <span class="price">R$ 39,90</span>
+                                    </div>
+                                    <p class="text-muted small">Manicure completa com acabamento à sua escolha.</p>
+                                    <div class="mt-auto d-flex gap-2">
+                                        <a href="#reserva" class="btn btn-outline-secondary">Reservar</a>
+                                        <a href="#detalhe3" class="btn btn-danger">Saiba mais</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="card h-100 shadow-sm">
+                                <img src="rosto.jpg" class="card-img-top" alt="Tratamento facial relaxante">
+                                <div class="card-body d-flex flex-column">
+                                    <div class="d-flex justify-content-between">
+                                        <strong>Limpeza de Pele</strong>
+                                        <span class="price">R$ 89,90</span>
+                                    </div>
+                                    <p class="text-muted small">Procedimento completo para renovar e hidratar sua pele.</p>
+                                    <div class="mt-auto d-flex gap-2">
+                                        <a href="#reserva" class="btn btn-outline-secondary">Reservar</a>
+                                        <a href="#detalhe4" class="btn btn-danger">Saiba mais</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="card h-100 shadow-sm">
+                                <img src="massagem.jpg" class="card-img-top" alt="Massagem relaxante">
+                                <div class="card-body d-flex flex-column">
+                                    <div class="d-flex justify-content-between">
+                                        <strong>Massagem Relax</strong>
+                                        <span class="price">R$ 99,90</span>
+                                    </div>
+                                    <p class="text-muted small">30 minutos de massagem com aromaterapia para aliviar o estresse.</p>
+                                    <div class="mt-auto d-flex gap-2">
+                                        <a href="#reserva" class="btn btn-outline-secondary">Reservar</a>
+                                        <a href="#detalhe5" class="btn btn-danger">Saiba mais</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="card h-100 shadow-sm">
+                                <img src="pele.jpg" class="card-img-top" alt="Pacote completo">
+                                <div class="card-body d-flex flex-column">
+                                    <div class="d-flex justify-content-between">
+                                        <strong>Pacote SPA Completo</strong>
+                                        <span class="price">R$ 249,90</span>
+                                    </div>
+                                    <p class="text-muted small">Dia de beleza: cabelo, unhas e spa — tudo em um só pacote.</p>
+                                    <div class="mt-auto d-flex gap-2">
+                                        <a href="#reserva" class="btn btn-outline-secondary">Reservar</a>
+                                        <a href="#detalhe6" class="btn btn-danger">Saiba mais</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="app" class="py-5 container">
+            <div class="app-card d-flex flex-wrap align-items-center justify-content-between">
+                <div class="col-md-6">
+                    <h2 class="mb-3">📱 Baixe nosso App</h2>
+                    <p class="text-muted mb-4">
+                        Tenha acesso rápido às promoções, agende horários e receba novidades exclusivas direto no seu celular.
+                    </p>
+                    <a href="#" class="btn btn-primary fw-bold">⬇️ Download</a>
+                </div>
+                <div class="col-md-5 text-center mt-4 mt-md-0">
+                    <div class="phone-frame mx-auto">
+                        <img src="app-preview.jpg" alt="App Vitta Beauty" class="app-screen">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <section id="contato" class="container py-4">
+            <h3>Contato</h3>
+            <p class="text-muted">Estrada da Baronesa, 1023 — Jardim Ângela • (11) 91234-5678 • contato@vittabeauty.com</p>
+        </section>
+
+        <br>
+        <div class="container d-flex justify-content-between flex-wrap">
+            <div>© <strong>Vitta Beauty</strong> — Salão de beleza</div>
+            <div class="text-muted">Por Felipe Lima</div>
+        </div>
+    </footer>
+
+    <script src="Sal%C3%A3o%20VittaBeauty%20%E2%80%94%20Promo%C3%A7%C3%B5es_files/bootstrap.bundle.min.js"></script>
+
+
+</body></html>
