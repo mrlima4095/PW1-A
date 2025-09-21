@@ -121,7 +121,7 @@ def logout():
 # |
 # Main API
 # | (Order Service)
-@app.route('/reserva')
+@app.route('/aps/reserva', methods=['GET'])
 def reserva():
     token = request.cookies.get('token')
     user = get_user(token)

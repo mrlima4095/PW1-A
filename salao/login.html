@@ -58,9 +58,10 @@
             const password = document.getElementById("password").value;
 
             const response = await fetch("/aps/login", {
-                method: "POST",
+                method: "GET",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, password })
+                body: JSON.stringify({ email, password }),
+                credentials: "include"
             });
 
             const data = await response.json();
