@@ -57,18 +57,37 @@
             const email = document.getElementById("email").value.trim().toLowerCase();
             const password = document.getElementById("password").value;
 
-            const response = await fetch("/aps/login", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, password }),
-                credentials: "include"
-            });
+            try {
+                const response = await fetch("/aps/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, password }),
+                    credentials: "include"
+                });
 
-            const data = await response.json();
-            alert(data.response);
+                const data = await response.json();
 
-            if (response.ok) { window.location.href = "index.html"; }
+                if (response.ok) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Login realizado!',
+                        text: 'Bem-vindo(a)! Redirecionando...',
+                        timer: 2000,
+                        showConfirmButton: false
+                    }).then(() => { window.location.href = "index.html"; });
+                } else {
+                    let mensagem = "Ocorreu um erro. Tente novamente.";
+                    if (response.status === 401) mensagem = "E-mail ou senha incorretos!";
+                    if (response.status === 400) mensagem = "Formato inválido. Certifique-se de preencher os campos corretamente.";
+                    if (response.status === 500) mensagem = "Erro no servidor. Tente mais tarde.";
+
+                    Swal.fire({ icon: 'error', title: 'Falha no login', text: mensagem });
+                }
+
+            } catch (err) { Swal.fire({ icon: 'error', title: 'Erro', text: 'Não foi possível conectar ao servidor. Verifique sua internet e tente novamente.' });
+            }
         });
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 </html>

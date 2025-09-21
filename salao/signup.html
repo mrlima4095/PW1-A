@@ -65,6 +65,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         document.getElementById("signupForm").addEventListener("submit", async function(e) {
             e.preventDefault();
@@ -75,16 +76,35 @@
             const birthday = document.getElementById("birthday").value;
             const password = document.getElementById("password").value;
 
-            const response = await fetch("/aps/signup", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ fullname, email, phone, birthday, password })
-            });
+            try {
+                const response = await fetch("/aps/signup", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ fullname, email, phone, birthday, password }),
+                    credentials: "include"
+                });
 
-            const data = await response.json();
-            alert(data.response);
+                const data = await response.json();
 
-            if (response.ok) { window.location.href = "login.html"; } 
+                if (response.ok) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Cadastro realizado!',
+                        text: 'Sua conta foi criada com sucesso. Redirecionando para login...',
+                        timer: 2500,
+                        showConfirmButton: false
+                    }).then(() => { window.location.href = "login.html"; });
+                } else {
+                    let mensagem = "Ocorreu um erro. Tente novamente.";
+                    if (response.status === 409) mensagem = "Este e-mail já está cadastrado.";
+                    if (response.status === 400) mensagem = "Preencha todos os campos corretamente.";
+                    if (response.status === 500) mensagem = "Erro no servidor. Tente mais tarde.";
+
+                    Swal.fire({ icon: 'error', title: 'Falha no cadastro', text: mensagem });
+                }
+
+            } catch (err) { Swal.fire({ icon: 'error', title: 'Erro', text: 'Não foi possível conectar ao servidor. Verifique sua internet e tente novamente.' });
+            }
         });
     </script>
 </body>

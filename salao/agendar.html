@@ -15,7 +15,7 @@
     <div class="reserva-card">
         <div class="text-center mb-4">
             <img src="icon.png" alt="Logo" class="mb-3" style="width:60px; height:60px; border-radius:12px;">
-            <h1>Vitta BEAUTY</h1>
+            <h1><span>VITTA</span> <span class="fw-bold">BEAUTY</span></h1>
             <p class="text-muted">Agende um horario!</p>
         </div>
         <form id="reservaForm">
@@ -39,26 +39,53 @@
         </form>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         document.getElementById("reservaForm").addEventListener("submit", async function(e) {
             e.preventDefault();
+
             const service = document.getElementById("service").value;
             const datetime = document.getElementById("datetime").value;
 
-            const response = await fetch("/aps/agendar", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ service, datetime })
-            });
+            try {
+                const response = await fetch("/aps/agendar", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ service, datetime }),
+                    credentials: "include"
+                });
 
-            const data = await response.json();
-            alert(data.response);
+                const data = await response.json();
 
-            if (response.ok) { window.location.reload(); }
+                if (response.ok) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Agendamento realizado!',
+                        text: 'Seu horário foi reservado com sucesso.',
+                        timer: 2000,
+                        showConfirmButton: false
+                    }).then(() => { window.location.reload(); });
+                } else {
+                    let mensagem = "Ocorreu um erro. Tente novamente.";
+                    if (response.status === 401) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Não autorizado',
+                            text: "Você precisa estar logado para agendar.",
+                            showCancelButton: true,
+                            confirmButtonText: 'Login',
+                            cancelButtonText: 'Voltar'
+                        }).then((result) => { if (result.isConfirmed) window.location.href = "login.html"; });
+                        return;
+                    }
+                    if (response.status === 400) mensagem = "Por favor, preencha todos os campos corretamente.";
+                    if (response.status === 409) mensagem = "Este horário já está ocupado.";
+
+                    Swal.fire({ icon: 'error', title: 'Erro ao agendar', text: mensagem });
+                }
+            } catch (err) { Swal.fire({ icon: 'error', title: 'Erro', text: 'Não foi possível conectar ao servidor. Verifique sua conexão e tente novamente.' });
+            }
         });
-
-        async function reservar() { await fetch("/aps/reserva", { method: "GET", credentials: "include" }); }
-        reservar();
     </script>
 </body>
 </html>
