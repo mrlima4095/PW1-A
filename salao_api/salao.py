@@ -103,7 +103,7 @@ def signup():
     if mailcursor.fetchone(): return jsonify({"response": "This email is already registered."}), 409
 
     mailcursor.execute(
-        "INSERT INTO users (email, fullname, password, role, phone, birthday) VALUES (?, ?, ?, ?, 'user', ?, ?)",
+        "INSERT INTO users (email, fullname, password, role, phone, birthday) VALUES (?, ?, ?, 'user', ?, ?)",
         (email, fullname, password, phone, birthday)
     )
     mailserver.commit()
