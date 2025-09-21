@@ -83,7 +83,7 @@ def login():
     if row and bcrypt.checkpw(payload.get('password').encode('utf-8'), row['password']):
         token = gen_token(email)
         response = make_response(jsonify({"response": "Login successful!"}), 200)
-        response.set_cookie('token', token, httponly=True, secure=True, samesite='Lax', max_age=60*60*24*7)
+        response.set_cookie('token', token, httponly=True, secure=False, samesite='Lax', max_age=60*60*24*7)
         return response
     else: return jsonify({"response": "Bad credentials!"}), 401
 # | (Signup)
@@ -110,7 +110,7 @@ def signup():
 
     token = gen_token(email)
     response = make_response(jsonify({"response": "Signup successful!"}), 200)
-    response.set_cookie('token', token, httponly=True, secure=True, samesite='Lax', max_age=60*60*24*7)
+    response.set_cookie('token', token, httponly=True, secure=False, samesite='Lax', max_age=60*60*24*7)
     return response
 # | (Logout)
 @app.route('/aps/logout', methods=['POST'])
