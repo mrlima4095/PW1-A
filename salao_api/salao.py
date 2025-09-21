@@ -126,7 +126,7 @@ def reserva():
     token = request.cookies.get('token')
     user = get_user(token)
 
-    return redirect('login.html' if not user else 'agendar.html')
+    return redirect('login.html') if user else 200
 @app.route('/aps/agendar', methods=['POST'])
 def agendar():
     token = request.cookies.get('token')

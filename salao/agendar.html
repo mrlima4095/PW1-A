@@ -56,6 +56,9 @@
 
             if (response.ok) { window.location.reload(); }
         });
+
+        async function reservar() { await fetch("/aps/reserva", { method: "GET", credentials: "include" }); }
+        reservar();
     </script>
 </body>
 </html>
