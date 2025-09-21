@@ -78,7 +78,7 @@
             const response = await fetch("/aps/signup", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ fullname, username, email, phone, birthday, password })
+                body: JSON.stringify({ fullname, email, phone, birthday, password })
             });
 
             const data = await response.json();
