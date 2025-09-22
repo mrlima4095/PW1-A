@@ -25,7 +25,8 @@
         <div class="d-flex gap-2">
             <a href="index.html" class="btn btn-outline-secondary w-50 fw-bold">Voltar</a>
             <a href="agendar.html" class="btn btn-primary w-50">Agendar</a>
-        </div><br>
+            <button class="btn btn-danger w-50" onclick="deslogar()">Sair</button>
+        </div>
         <table class="table table-striped" id="agendaTable">
             <thead>
                 <tr>
@@ -102,6 +103,24 @@
                 window.location.href = 'login.html';
             }
         }
+        async function deslogar() {
+            try {
+                const res = await fetch('/aps/logout', {
+                    method: 'POST',
+                    credentials: 'include'
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    Swal.fire({ icon: 'success', title: 'Logout', text: data.response })
+                        .then(() => window.location.href = 'login.html');
+                } else {
+                    Swal.fire({ icon: 'error', title: 'Erro', text: data.response });
+                }
+            } catch (err) {
+                Swal.fire({ icon: 'error', title: 'Erro', text: 'Falha ao desconectar.' });
+            }
+        }
+
         
         window.onload = async () => {
             await verificarLogin();
