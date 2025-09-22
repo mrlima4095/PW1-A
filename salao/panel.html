@@ -59,7 +59,11 @@
                         <td>${new Date(a.datetime).toLocaleString('pt-BR')}</td>
                         <td>${a.user_email}</td>
                         <td>
-                            ${data.role === 'worker' ? `<button class="btn btn-outline-secondary btn-sm" onclick="remarcar(${a.id})">Remarcar</button>` : '-'}
+                            ${
+                                data.role === 'worker'
+                                    ? `<button class="btn btn-outline-secondary btn-sm" onclick="remarcar(${a.id})">Remarcar</button>`
+                                    : `<button class="btn btn-danger btn-sm" onclick="cancelar(${a.id})">Cancelar</button>`
+                            }
                         </td>
                     `;
                     tbody.appendChild(tr);
