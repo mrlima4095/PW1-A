@@ -124,6 +124,38 @@
                 Swal.fire({ icon: 'error', title: 'Erro', text: 'Falha ao desconectar.' });
             }
         }
+        async function cancelar(id) {
+            const confirm = await Swal.fire({
+                title: 'Tem certeza?',
+                text: 'Você quer cancelar este agendamento?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sim, cancelar',
+                cancelButtonText: 'Não'
+            });
+        
+            if (!confirm.isConfirmed) return;
+        
+            try {
+                const res = await fetch('/aps/cancelar', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ id })
+                });
+                const data = await res.json();
+        
+                if (res.ok) {
+                    Swal.fire({ icon: 'success', title: 'Cancelado!', text: data.response });
+                    carregarAgendas();
+                } else {
+                    Swal.fire({ icon: 'error', title: 'Erro', text: data.response });
+                }
+            } catch (err) {
+                Swal.fire({ icon: 'error', title: 'Erro', text: 'Falha ao conectar ao servidor.' });
+            }
+        }
+
 
         
         window.onload = async () => {
