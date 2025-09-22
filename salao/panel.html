@@ -111,7 +111,7 @@
                 });
                 const data = await res.json();
                 if (res.ok) {
-                    Swal.fire({ icon: 'success', title: 'Logout', text: data.response })
+                    Swal.fire({ icon: 'success', title: 'VittaBeauty', text: "Você foi desconectado!" })
                         .then(() => window.location.href = 'login.html');
                 } else {
                     Swal.fire({ icon: 'error', title: 'Erro', text: data.response });
