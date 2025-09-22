@@ -157,19 +157,25 @@ def agendar():
 def painel():
     token = request.cookies.get('token')
     user_data = get_user(token)
-    if not user_data: return jsonify({"response": "Unauthorized"}), 401
+    if not user_data:
+        return jsonify({"response": "Unauthorized"}), 401
 
     conn, cursor = getdb()
-    cursor.execute("SELECT role FROM users WHERE email = ?", (user_data['username'],))
+    cursor.execute("SELECT role, fullname FROM users WHERE email = ?", (user_data['username'],))
     row = cursor.fetchone()
-    role = row['role'] if row else 'user'
 
-    if role == 'worker': cursor.execute("SELECT * FROM agendas ORDER BY datetime ASC")
-    else: cursor.execute("SELECT * FROM agendas WHERE user_email = ? ORDER BY datetime ASC", (user_data['username'],))
+    role = row['role'] if row else 'user'
+    fullname = row['fullname'] if row else ''
+
+    if role == 'worker':
+        cursor.execute("SELECT * FROM agendas ORDER BY datetime ASC")
+    else:
+        cursor.execute("SELECT * FROM agendas WHERE user_email = ? ORDER BY datetime ASC", (user_data['username'],))
 
     agendas = [dict(r) for r in cursor.fetchall()]
     conn.close()
-    return jsonify({"role": role, "agendas": agendas})
+
+    return jsonify({"role": role, "name": fullname, "agendas": agendas})
 
 # |
 # |
