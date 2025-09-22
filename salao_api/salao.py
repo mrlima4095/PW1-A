@@ -167,6 +167,36 @@ def agendar():
     conn.close()
 
     return jsonify({"response": "Service ordered!"})
+@app.route('/aps/cancelar', methods=['POST'])
+def cancelar():
+    token = request.cookies.get('token')
+    user_data = get_user(token)
+    if not user_data:
+        return jsonify({"response": "Unauthorized"}), 401
+
+    payload = request.get_json()
+    agenda_id = payload.get('id')
+
+    if not agenda_id:
+        return jsonify({"response": "Missing agenda ID"}), 400
+
+    conn, cursor = getdb()
+    cursor.execute("SELECT user_email FROM agendas WHERE id = ?", (agenda_id,))
+    row = cursor.fetchone()
+
+    if not row:
+        conn.close()
+        return jsonify({"response": "Agenda not found"}), 404
+
+    if row['user_email'] != user_data['username']:
+        conn.close()
+        return jsonify({"response": "Forbidden"}), 403
+
+    cursor.execute("DELETE FROM agendas WHERE id = ?", (agenda_id,))
+    conn.commit()
+    conn.close()
+
+    return jsonify({"response": "Agenda cancelada com sucesso!"}), 200
 # | (Panel)
 @app.route('/aps/painel', methods=['GET'])
 def painel():
