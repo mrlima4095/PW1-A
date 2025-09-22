@@ -176,6 +176,14 @@ def painel():
     conn.close()
 
     return jsonify({"role": role, "name": fullname, "agendas": agendas})
+@app.route('/aps/check', methods=['GET'])
+def check_auth():
+    token = request.cookies.get('token')
+    user_data = get_user(token)
+
+    if not user_data:
+        return redirect("/login.html")  # redireciona para a tela de login
+    return jsonify({"status": "ok"}), 200
 
 # |
 # |
