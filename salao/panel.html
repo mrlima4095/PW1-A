@@ -41,9 +41,12 @@
                 const res = await fetch('/aps/painel', { credentials: 'include' });
                 if (!res.ok) throw res;
                 const data = await res.json();
+        
+                document.getElementById("userName").textContent = data.name;
+        
                 const tbody = document.querySelector('#agendaTable tbody');
                 tbody.innerHTML = '';
-
+        
                 data.agendas.forEach(a => {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
@@ -61,6 +64,7 @@
                     .then(() => window.location.href = 'login.html');
             }
         }
+
 
         async function remarcar(id) {
             const { value: datetime } = await Swal.fire({
