@@ -182,7 +182,7 @@ def check_auth():
     user_data = get_user(token)
 
     if not user_data:
-        return redirect("/login.html")  # redireciona para a tela de login
+        return redirect("login.html")  # redireciona para a tela de login
     return jsonify({"status": "ok"}), 200
 
 # |
