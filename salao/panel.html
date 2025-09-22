@@ -92,6 +92,18 @@
                 Swal.fire({ icon: 'error', title: 'Erro', text: 'Não foi possível conectar ao servidor.' });
             }
         }
+        async function verificarLogin() {
+    const res = await fetch('/aps/check', { credentials: 'include' });
+    if (!res.ok) {
+        window.location.href = 'login.html';
+    }
+}
+
+window.onload = async () => {
+    await verificarLogin();
+    carregarAgendas();
+};
+
 
         window.onload = carregarAgendas;
     </script>
