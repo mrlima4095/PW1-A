@@ -229,6 +229,52 @@ def check_auth():
     if not user_data:
         return redirect("login.html")  # redireciona para a tela de login
     return jsonify({"status": "ok"}), 200
+@app.route('/aps/remarcar', methods=['POST'])
+def remarcar():
+    token = request.cookies.get('token')
+    user_data = get_user(token)
+    if not user_data:
+        return jsonify({"response": "Unauthorized"}), 401
+
+    payload = request.get_json()
+    agenda_id = payload.get('id')
+    new_datetime = payload.get('datetime')
+
+    if not agenda_id or not new_datetime:
+        return jsonify({"response": "Missing data"}), 400
+
+    conn, cursor = getdb()
+    # pega role
+    cursor.execute("SELECT role FROM users WHERE email = ?", (user_data['username'],))
+    row = cursor.fetchone()
+    role = row['role'] if row else 'user'
+
+    # verifica se a agenda existe
+    cursor.execute("SELECT user_email FROM agendas WHERE id = ?", (agenda_id,))
+    agenda_row = cursor.fetchone()
+    if not agenda_row:
+        conn.close()
+        return jsonify({"response": "Agenda not found"}), 404
+
+    # se não for worker, só pode remarcar a própria agenda
+    if role != 'worker' and agenda_row['user_email'] != user_data['username']:
+        conn.close()
+        return jsonify({"response": "Forbidden"}), 403
+
+    # verifica se o novo horário já está ocupado (somente se não for worker)
+    if role != 'worker':
+        cursor.execute("SELECT COUNT(*) as total FROM agendas WHERE datetime = ?", (new_datetime,))
+        total = cursor.fetchone()['total']
+        if total > 0:
+            conn.close()
+            return jsonify({"response": "Busy agenda"}), 409
+
+    # atualiza a agenda
+    cursor.execute("UPDATE agendas SET datetime = ? WHERE id = ?", (new_datetime, agenda_id))
+    conn.commit()
+    conn.close()
+
+    return jsonify({"response": "Agenda remarcada com sucesso!"}), 200
 
 # |
 # |
