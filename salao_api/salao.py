@@ -72,7 +72,8 @@ def get_user(token):
 @app.route('/aps/login', methods=['POST'])
 def login():
     mailserver, mailcursor = getdb()
-    if not request.is_json: return jsonify({"response": "Invalid content type. Must be JSON."}), 400
+    if not request.is_json:
+        return jsonify({"response": "Invalid content type. Must be JSON."}), 400
 
     payload = request.get_json()
     email = payload.get('email')
@@ -80,12 +81,26 @@ def login():
     mailcursor.execute("SELECT password FROM users WHERE email = ?", (email,))
     row = mailcursor.fetchone()
 
-    if row and bcrypt.checkpw(payload.get('password').encode('utf-8'), row['password']):
-        token = gen_token(email)
-        response = make_response(jsonify({"response": "Login successful!"}), 200)
-        response.set_cookie('token', token, httponly=True, secure=False, samesite='Lax', max_age=60*60*24*7)
-        return response
-    else: return jsonify({"response": "Bad credentials!"}), 401
+    if row:
+        stored_password = row['password']
+        # garante que está em bytes
+        if isinstance(stored_password, str):
+            stored_password = stored_password.encode('utf-8')
+
+        if bcrypt.checkpw(payload.get('password').encode('utf-8'), stored_password):
+            token = gen_token(email)
+            response = make_response(jsonify({"response": "Login successful!"}), 200)
+            response.set_cookie(
+                'token',
+                token,
+                httponly=True,
+                secure=False,  # coloca True em produção com HTTPS
+                samesite='Lax',
+                max_age=60*60*24*7
+            )
+            return response
+
+    return jsonify({"response": "Bad credentials!"}), 401
 # | (Signup)
 @app.route('/aps/signup', methods=['POST'])
 def signup():
