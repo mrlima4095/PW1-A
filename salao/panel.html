@@ -40,7 +40,6 @@
         </table>
     </div>
 
-    <!-- Modal de Agendamento -->
     <div class="modal fade" id="agendarModal" tabindex="-1" aria-labelledby="agendarModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -50,6 +49,10 @@
                 </div>
                 <div class="modal-body">
                     <form id="reservaForm">
+                        <div id="workerEmailField" class="mb-3" style="display:none;">
+                            <label for="clientEmail" class="form-label">Email do Cliente</label>
+                            <input type="email" class="form-control" id="clientEmail" placeholder="cliente@exemplo.com">
+                        </div>
                         <div class="mb-3">
                             <label for="service" class="form-label">Serviço</label>
                             <select class="form-control" id="service" required>
@@ -79,17 +82,22 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
     <script>
+        let userRole = "user";
+
         async function carregarAgendas() {
             try {
                 const res = await fetch('/aps/painel', { credentials: 'include' });
                 if (!res.ok) { throw res; }
                 const data = await res.json();
-        
+
                 document.getElementById("userName").textContent = data.name;
-        
+                userRole = data.role;
+
+                if (userRole === "worker") { document.getElementById("workerEmailField").style.display = "block"; }
+
                 const tbody = document.querySelector('#agendaTable tbody');
                 tbody.innerHTML = '';
-        
+
                 data.agendas.forEach(a => {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
@@ -97,16 +105,15 @@
                         <td>${new Date(a.datetime).toLocaleString('pt-BR')}</td>
                         <td>${a.user_email}</td>
                         <td>
-                            ${
-                                data.role === 'worker'
-                                    ? `<button class="btn btn-outline-secondary btn-sm" onclick="remarcar(${a.id})">Remarcar</button>`
-                                    : `<button class="btn btn-danger btn-sm" onclick="cancelar(${a.id})">Cancelar</button>`
-                            }
+                            <button class="btn btn-outline-secondary btn-sm" onclick="remarcar(${a.id})">Remarcar</button>
+                            <button class="btn btn-danger btn-sm" onclick="cancelar(${a.id})">Cancelar</button>
                         </td>
                     `;
                     tbody.appendChild(tr);
                 });
-            } catch (err) { Swal.fire({ icon: 'error', title: 'Erro', text: 'Não foi possível carregar os agendamentos. Faça login.' }).then(() => window.location.href = 'login.html'); }
+            } catch (err) {
+                Swal.fire({ icon: 'error', title: 'Erro', text: 'Não foi possível carregar os agendamentos. Faça login.' }).then(() => window.location.href = 'login.html');
+            }
         }
 
         async function remarcar(id) {
@@ -183,12 +190,13 @@
 
             const service = document.getElementById("service").value;
             const datetime = document.getElementById("datetime").value;
+            const clientEmail = userRole === "worker" ? document.getElementById("clientEmail").value : null;
 
             try {
                 const response = await fetch("/aps/agendar", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ service, datetime }),
+                    body: JSON.stringify({ service, datetime, clientEmail }),
                     credentials: "include"
                 });
 
@@ -198,7 +206,7 @@
                     Swal.fire({
                         icon: 'success',
                         title: 'Agendamento realizado!',
-                        text: 'Seu horário foi reservado com sucesso.',
+                        text: data.response,
                         timer: 2000,
                         showConfirmButton: false
                     }).then(() => {
@@ -207,21 +215,7 @@
                         carregarAgendas();
                     });
                 } else {
-                    let mensagem = "Ocorreu um erro. Tente novamente.";
-                    if (response.status === 401) {
-                        Swal.fire({
-                            icon: 'warning',
-                            title: 'Não autorizado',
-                            text: "Você precisa estar logado para agendar.",
-                            showCancelButton: true,
-                            confirmButtonText: 'Login',
-                            cancelButtonText: 'Voltar'
-                        }).then((result) => { if (result.isConfirmed) window.location.href = "login.html"; });
-                        return;
-                    }
-                    if (response.status === 400) mensagem = "Por favor, preencha todos os campos corretamente.";
-                    if (response.status === 409) mensagem = "Este horário já está ocupado.";
-
+                    let mensagem = data.response || "Ocorreu um erro. Tente novamente.";
                     Swal.fire({ icon: 'error', title: 'Erro ao agendar', text: mensagem });
                 }
             } catch (err) {

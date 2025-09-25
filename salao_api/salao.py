@@ -145,6 +145,7 @@ def agendar():
     payload = request.get_json()
     service = payload.get('service')
     datetime_str = payload.get('datetime')
+    client_email = payload.get('clientEmail')
 
     if not service or not datetime_str: return jsonify({"response": "Incomplete data!"}), 400
 
@@ -154,33 +155,47 @@ def agendar():
     row = cursor.fetchone()
     role = row['role'] if row else 'user'
 
-    cursor.execute("SELECT COUNT(*) as total FROM agendas WHERE datetime = ?", (datetime_str,))
-    total_agendas = cursor.fetchone()['total']
+    target_email = user_data['username']
+    if role == 'worker' and client_email:
+        target_email = client_email.strip().lower()
 
-    if role != 'worker' and total_agendas > 0: return jsonify({"response": "Busy agenda"}), 409
+        cursor.execute("SELECT 1 FROM users WHERE email = ?", (target_email,))
+        if not cursor.fetchone():
+            conn.close()
+            return jsonify({"response": "Cliente não encontrado."}), 404
+
+    if role != 'worker':
+        cursor.execute("SELECT COUNT(*) as total FROM agendas WHERE datetime = ?", (datetime_str,))
+        total_agendas = cursor.fetchone()['total']
+        if total_agendas > 0:
+            conn.close()
+            return jsonify({"response": "Busy agenda"}), 409
 
     cursor.execute(
         "INSERT INTO agendas (datetime, service, user_email) VALUES (?, ?, ?)",
-        (datetime_str, service, user_data['username'])
+        (datetime_str, service, target_email)
     )
     conn.commit()
     conn.close()
 
-    return jsonify({"response": "Service ordered!"})
+    return jsonify({"response": "Agendamento realizado com sucesso!"}), 200
 @app.route('/aps/cancelar', methods=['POST'])
 def cancelar():
     token = request.cookies.get('token')
     user_data = get_user(token)
-    if not user_data:
-        return jsonify({"response": "Unauthorized"}), 401
+    if not user_data: return jsonify({"response": "Unauthorized"}), 401
 
     payload = request.get_json()
     agenda_id = payload.get('id')
 
-    if not agenda_id:
-        return jsonify({"response": "Missing agenda ID"}), 400
+    if not agenda_id: return jsonify({"response": "Missing agenda ID"}), 400
 
     conn, cursor = getdb()
+
+    cursor.execute("SELECT role FROM users WHERE email = ?", (user_data['username'],))
+    row = cursor.fetchone()
+    role = row['role'] if row else 'user'
+
     cursor.execute("SELECT user_email FROM agendas WHERE id = ?", (agenda_id,))
     row = cursor.fetchone()
 
@@ -188,7 +203,7 @@ def cancelar():
         conn.close()
         return jsonify({"response": "Agenda not found"}), 404
 
-    if row['user_email'] != user_data['username']:
+    if role != 'worker' and row['user_email'] != user_data['username']:
         conn.close()
         return jsonify({"response": "Forbidden"}), 403
 
